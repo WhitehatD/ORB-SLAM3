@@ -124,6 +124,7 @@ int main(int argc, char *argv[])
     double t_track = 0.f;
 
     int proccIm=0;
+    size_t global_frame_counter = 0; // minimal progress counter
     for (seq = 0; seq<num_seq; seq++)
     {
 
@@ -220,6 +221,7 @@ int main(int argc, char *argv[])
 
             if(ttrack<T)
                 usleep((T-ttrack)*1e6); // 1e6
+            if((global_frame_counter++ % 50)==0) std::cout << "[mono_inertial_euroc] progress: " << global_frame_counter << "/" << tot_images << std::endl;
         }
         if(seq < num_seq - 1)
         {
@@ -228,6 +230,7 @@ int main(int argc, char *argv[])
             SLAM.ChangeDataset();
         }
     }
+    std::cout << "[mono_inertial_euroc] completed " << global_frame_counter << " frames." << std::endl;
 
     // Stop all threads
     SLAM.Shutdown();

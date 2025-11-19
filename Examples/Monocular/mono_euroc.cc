@@ -68,6 +68,8 @@ int main(int argc, char **argv)
         nImages[seq] = vstrImageFilenames[seq].size();
         tot_images += nImages[seq];
     }
+    // Minimal progress: 1) counter declaration
+    size_t global_frame_counter = 0; // progress counter
 
     // Vector for tracking time statistics
     vector<float> vTimesTrack;
@@ -165,9 +167,10 @@ int main(int argc, char **argv)
             //std::cout << "ttrack: " << ttrack << std::endl;
 
             if(ttrack<T) {
-                //std::cout << "usleep: " << (dT-ttrack) << std::endl;
                 usleep((T-ttrack)*1e6); // 1e6
             }
+            // Minimal progress: 2) periodic log every 50 frames
+            if((global_frame_counter++ % 50)==0) std::cout << "[mono_euroc] progress: " << global_frame_counter << "/" << tot_images << std::endl;
         }
 
         if(seq < num_seq - 1)
@@ -183,6 +186,9 @@ int main(int argc, char **argv)
         }
 
     }
+    // Minimal progress: 3) final completion log
+    std::cout << "[mono_euroc] completed " << global_frame_counter << " frames." << std::endl;
+
     // Stop all threads
     SLAM.Shutdown();
 

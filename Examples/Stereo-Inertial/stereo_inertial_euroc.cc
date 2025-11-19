@@ -132,6 +132,7 @@ int main(int argc, char **argv)
     ORB_SLAM3::System SLAM(argv[1],argv[2],ORB_SLAM3::System::IMU_STEREO, false);
 
     cv::Mat imLeft, imRight;
+    size_t global_frame_counter = 0; // minimal progress counter
     for (seq = 0; seq<num_seq; seq++)
     {
         // Seq loop
@@ -208,6 +209,7 @@ int main(int argc, char **argv)
 
             if(ttrack<T)
                 usleep((T-ttrack)*1e6); // 1e6
+            if((global_frame_counter++ % 50)==0) std::cout << "[stereo_inertial_euroc] progress: " << global_frame_counter << "/" << tot_images << std::endl;
         }
 
         if(seq < num_seq - 1)
@@ -236,6 +238,7 @@ int main(int argc, char **argv)
         SLAM.SaveTrajectoryEuRoC("CameraTrajectory.txt");
         SLAM.SaveKeyFrameTrajectoryEuRoC("KeyFrameTrajectory.txt");
     }
+    std::cout << "[stereo_inertial_euroc] completed " << global_frame_counter << " frames." << std::endl;
 
     return 0;
 }
