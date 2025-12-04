@@ -158,6 +158,9 @@ public:
     void SaveTrajectoryEuRoC(const string &filename, Map* pMap);
     void SaveKeyFrameTrajectoryEuRoC(const string &filename, Map* pMap);
 
+    // Saves the current MapPoints to a standard file (e.g., plain text or PLY/PCD).
+    void ExportMapPointCloud(const std::string &filename);
+
     // Save data used for initialization debug
     void SaveDebugData(const int &iniIdx);
 
