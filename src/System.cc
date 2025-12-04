@@ -506,6 +506,51 @@ void System::Reset()
     mbReset = true;
 }
 
+void System::ExportMapPointCloud(const std::string &filename)
+{
+    // 1. Get the current active map from the Atlas
+    Map* pActiveMap = mpAtlas->GetCurrentMap();
+
+    if (!pActiveMap)
+    {
+        cerr << "ERROR: Cannot export point cloud. No active map found." << endl;
+        return;
+    }
+
+    // 2. Get all MapPoints from the active map
+    std::vector<MapPoint*> vMapPoints = pActiveMap->GetAllMapPoints();
+
+    // 3. Open the output file (using a simple XYZ format for illustration)
+    std::ofstream f;
+    f.open(filename.c_str());
+    if (!f.is_open())
+    {
+        cerr << "ERROR: Could not open file for point cloud export: " << filename << endl;
+        return;
+    }
+
+    // 4. Write the 3D coordinates for each MapPoint
+    f << std::fixed;
+    for (MapPoint* pMP : vMapPoints)
+    {
+        // Check if the MapPoint is valid (not culled/bad)
+        if (pMP && !pMP->isBad())
+        {
+            // Get the 3D World Position
+            Eigen::Vector3f pos = pMP->GetWorldPos();
+
+            // Write X, Y, Z coordinates to the file
+            f << std::setprecision(9) << pos(0) << " "
+              << pos(1) << " "
+              << pos(2) << std::endl;
+        }
+    }
+
+    f.close();
+    cout << endl << "Successfully exported " << vMapPoints.size()
+         << " candidate MapPoints to " << filename << endl;
+}
+
 void System::ResetActiveMap()
 {
     unique_lock<mutex> lock(mMutexReset);
