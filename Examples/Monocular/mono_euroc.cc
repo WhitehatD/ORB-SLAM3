@@ -202,9 +202,12 @@ int main(int argc, char **argv)
     }
     else
     {
-        SLAM.SaveTrajectoryEuRoC("CameraTrajectory.txt");
-        SLAM.SaveKeyFrameTrajectoryEuRoC("KeyFrameTrajectory.txt");
+        SLAM.SaveTrajectoryEuRoC("/root/videos/CameraTrajectory.txt");
+        SLAM.SaveKeyFrameTrajectoryEuRoC("/root/videos/KeyFrameTrajectory.txt");
     }
+
+    cout << "Exporting Point Cloud to /root/videos/MapPointCloud.txt..." << endl;
+    SLAM.ExportMapPointCloud("/root/videos/MapPointCloud.txt");
 
     return 0;
 }
